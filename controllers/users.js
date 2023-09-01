@@ -32,7 +32,7 @@ module.exports = {
     createUser: async (req, res) => {
         try {
             await createIfNotExistTokensTable();
-            const { username, email, age, password } = req.body;
+            const { username, email, age = 0, password } = req.body;
             if(!username || !email || !password){
                 throw new Error('Incomplete Data')
             }
@@ -168,10 +168,11 @@ module.exports = {
             }
     
             const userId = req.decoded.id;
+            // console.log(userId);
             const foundUser = (await pool.query(
                 `SELECT * FROM users WHERE id = ${userId}`
             ))[0][0];
-    
+     
             if(!foundUser){
                 throw new Error('User not found');
             }
@@ -184,7 +185,7 @@ module.exports = {
                 `UPDATE users SET username = '${foundUser.username}', email = '${foundUser.email}', age = ${foundUser.age} WHERE id = ${userId}`
             )
             console.log("Updated user => ", updatedUser);
-            if(updatedUser[0]?.affectedRows){
+            if(updatedUser[0]?.affectedRows < 1){
                 return res.status(404).json({
                     message: "User Not Found"
                 });

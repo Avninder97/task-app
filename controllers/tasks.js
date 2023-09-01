@@ -54,7 +54,7 @@ module.exports = {
             
             const createdTaskId = (await pool.query(
                 `INSERT INTO tasks (\`description\`, \`completed\`, \`ownerId\`)
-                VALUES ('${description}', ${completed || true}, ${id})`
+                VALUES ('${description}', ${completed || false}, ${id})`
             ))[0].insertId;
             console.log(createdTaskId)
     
