@@ -13,14 +13,30 @@ const {
     tokenValidator 
 } = require('../middlewares/auth');
 
-router.get('/tasks', tokenValidator, getTasks);
+/*
+    ALL the below mentioned routes are protected and requires user to be logged In
 
-router.post('/tasks', tokenValidator, createTask);
+    GET ROUTE - get all the tasks of the loggedIn user
+    POST ROUTE - create a new task for loggedIn user
+*/
+router
+    .route('/tasks')
+    .get(tokenValidator, getTasks)
+    .post(tokenValidator, createTask);
 
-router.get('/tasks/:id', tokenValidator, getSingleTask);
+/*
+    ALL the below mentioned routes are protected 
+    and the passed task id must point to a task that belongs 
+    to loggedIn user for routes to be successful in performing expected operations
 
-router.patch('/tasks/:id', tokenValidator, updateTask);
-
-router.delete('/tasks/:id', tokenValidator, deleteTask);
+    GET ROUTE - get a task from id passed in the params
+    PATCH ROUTE - update the contents of the task with id that has been passed in the params
+    DELETE ROUTE - delete the task whose id has been passed in the params
+*/
+router
+    .route('/tasks/:id')
+    .get(tokenValidator, getSingleTask)
+    .patch(tokenValidator, updateTask)
+    .delete(tokenValidator, deleteTask);
 
 module.exports = router;
